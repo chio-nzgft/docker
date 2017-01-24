@@ -1,12 +1,3 @@
-[root@master kubernetes]# kubectl delete deployments nginx-deployment
-deployment "nginx-deployment" deleted
-[root@master kubernetes]# kubectl get deployments
-[root@master kubernetes]# kubectl get deployments
-[root@master kubernetes]# kubectl get service
-NAME         CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-kubernetes   10.254.0.1   <none>        443/TCP   12h
-[root@master kubernetes]# kubectl get pods
-[root@master kubernetes]# kubectl get pod
 [root@master kubernetes]# vi nginx-rc.yaml
 [root@master kubernetes]# vi nginx-service-nodeport.yaml
 [root@master kubernetes]# kubectl create -f nginx-rc.yaml
