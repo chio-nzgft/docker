@@ -1,0 +1,190 @@
+[root@master kubernetes]# kubectl delete deployments nginx-deployment
+deployment "nginx-deployment" deleted
+[root@master kubernetes]# kubectl get deployments
+[root@master kubernetes]# kubectl get deployments
+[root@master kubernetes]# kubectl get service
+NAME         CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   10.254.0.1   <none>        443/TCP   12h
+[root@master kubernetes]# kubectl get pods
+[root@master kubernetes]# kubectl get pod
+[root@master kubernetes]# vi nginx-rc.yaml
+[root@master kubernetes]# vi nginx-service-nodeport.yaml
+[root@master kubernetes]# kubectl create -f nginx-rc.yaml
+replicationcontroller "nginx-controller" created
+[root@master kubernetes]# kubectl create -f nginx-service-nodeport.yaml
+You have exposed your service on an external port on all nodes in your
+cluster.  If you want to expose this service to the external internet, you may
+need to set up firewall rules for the service port(s) (tcp:31939) to serve traffic.
+
+See http://releases.k8s.io/release-1.3/docs/user-guide/services-firewalls.md for more details.
+service "nginx-service-nodeport" created
+[root@master kubernetes]# kubectl get pods
+NAME                     READY     STATUS    RESTARTS   AGE
+nginx-controller-ar46n   1/1       Running   0          31s
+nginx-controller-m7n8b   1/1       Running   0          31s
+[root@master kubernetes]# kubectl describe pod  nginx-controller-ar46n
+Name:           nginx-controller-ar46n
+Namespace:      default
+Node:           192.168.0.68/192.168.0.68
+Start Time:     Tue, 24 Jan 2017 09:36:01 +0800
+Labels:         name=nginx
+Status:         Running
+IP:             172.17.0.2
+Controllers:    ReplicationController/nginx-controller
+Containers:
+  nginx:
+    Container ID:               docker://6345dd7ef556d514fffb6261218bbb51641da2a0b5b6b64a3cd5b42598156b51
+    Image:                      nginx
+    Image ID:                   docker-pullable://docker.io/nginx@sha256:33ff28a2763feccc1e1071a97960b7fef714d6e17e2d0ff573b74825d0049303
+    Port:                       80/TCP
+    State:                      Running
+      Started:                  Tue, 24 Jan 2017 09:36:04 +0800
+    Ready:                      True
+    Restart Count:              0
+    Volume Mounts:              <none>
+    Environment Variables:      <none>
+Conditions:
+  Type          Status
+  Initialized   True
+  Ready         True
+  PodScheduled  True
+No volumes.
+QoS Tier:       BestEffort
+Events:
+  FirstSeen     LastSeen        Count   From                    SubobjectPath           Type            Reason                  Message
+  ---------     --------        -----   ----                    -------------           --------        ------                  -------
+  39s           39s             1       {default-scheduler }                            Normal          Scheduled               Successfully assigned nginx-controller-ar46n to 192.168.0.68
+  39s           39s             1       {kubelet 192.168.0.68}  spec.containers{nginx}  Normal          Pulling                 pulling image "nginx"
+  39s           36s             2       {kubelet 192.168.0.68}                          Warning         MissingClusterDNS       kubelet does not have ClusterDNS IP configured and cannot create Pod using "ClusterFirst" policy. Falling back to DNSDefault policy.
+  36s           36s             1       {kubelet 192.168.0.68}  spec.containers{nginx}  Normal          Pulled                  Successfully pulled image "nginx"
+  36s           36s             1       {kubelet 192.168.0.68}  spec.containers{nginx}  Normal          Created                 Created container with docker id 6345dd7ef556
+  36s           36s             1       {kubelet 192.168.0.68}  spec.containers{nginx}  Normal          Started                 Started container with docker id 6345dd7ef556
+[root@master kubernetes]# kubectl describe pod  nginx-controller-m7n8b
+Name:           nginx-controller-m7n8b
+Namespace:      default
+Node:           192.168.0.67/192.168.0.67
+Start Time:     Tue, 24 Jan 2017 09:36:01 +0800
+Labels:         name=nginx
+Status:         Running
+IP:             172.17.0.2
+Controllers:    ReplicationController/nginx-controller
+Containers:
+  nginx:
+    Container ID:               docker://774332b0ea0f7d47277b7b86016816620a4f8b4b63777502fa6fb9e2506de41f
+    Image:                      nginx
+    Image ID:                   docker-pullable://docker.io/nginx@sha256:33ff28a2763feccc1e1071a97960b7fef714d6e17e2d0ff573b74825d0049303
+    Port:                       80/TCP
+    State:                      Running
+      Started:                  Tue, 24 Jan 2017 09:36:04 +0800
+    Ready:                      True
+    Restart Count:              0
+    Volume Mounts:              <none>
+    Environment Variables:      <none>
+Conditions:
+  Type          Status
+  Initialized   True
+  Ready         True
+  PodScheduled  True
+No volumes.
+QoS Tier:       BestEffort
+Events:
+  FirstSeen     LastSeen        Count   From                    SubobjectPath           Type            Reason                  Message
+  ---------     --------        -----   ----                    -------------           --------        ------                  -------
+  49s           49s             1       {default-scheduler }                            Normal          Scheduled               Successfully assigned nginx-controller-m7n8b to 192.168.0.67
+  49s           49s             1       {kubelet 192.168.0.67}  spec.containers{nginx}  Normal          Pulling                 pulling image "nginx"
+  49s           46s             2       {kubelet 192.168.0.67}                          Warning         MissingClusterDNS       kubelet does not have ClusterDNS IP configured and cannot create Pod using "ClusterFirst" policy. Falling back to DNSDefault policy.
+  46s           46s             1       {kubelet 192.168.0.67}  spec.containers{nginx}  Normal          Pulled                  Successfully pulled image "nginx"
+  46s           46s             1       {kubelet 192.168.0.67}  spec.containers{nginx}  Normal          Created                 Created container with docker id 774332b0ea0f
+  46s           46s             1       {kubelet 192.168.0.67}  spec.containers{nginx}  Normal          Started                 Started container with docker id 774332b0ea0f
+[root@master kubernetes]# kubectl get service
+NAME                     CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kubernetes               10.254.0.1       <none>        443/TCP    12h
+nginx-service-nodeport   10.254.235.178   <nodes>       8000/TCP   54s
+[root@master kubernetes]# ubectl describe service nginx-service-nodeport
+-bash: ubectl: command not found
+[root@master kubernetes]# kubectl describe service nginx-service-nodeport
+Name:                   nginx-service-nodeport
+Namespace:              default
+Labels:                 <none>
+Selector:               name=nginx
+Type:                   NodePort
+IP:                     10.254.235.178
+Port:                   <unset> 8000/TCP
+NodePort:               <unset> 31939/TCP
+Endpoints:              172.17.0.2:80,172.17.0.2:80
+Session Affinity:       None
+No events.
+
+[root@master kubernetes]# kubectl run test --image=tutum/curl -- sleep 10000
+deployment "test" created
+[root@master kubernetes]# kubectl get pods
+NAME                     READY     STATUS    RESTARTS   AGE
+nginx-controller-ar46n   1/1       Running   1          41m
+nginx-controller-m7n8b   1/1       Running   0          41m
+test-1735889912-u2m1n    1/1       Running   0          8s
+[root@master kubernetes]# kubectl get svc
+NAME                     CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kubernetes               10.254.0.1       <none>        443/TCP    13h
+nginx-service-nodeport   10.254.235.178   <nodes>       8000/TCP   41m
+[root@master kubernetes]# kubectl exec test-1735889912-u2m1n  -- curl -k http://10.254.235.178:8000
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   612  100   612    0     0  1078k      0 --:--:-- --:--:-- --:--:--  597k
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+[root@master kubernetes]# kubectl exec test-1735889912-u2m1n  -- curl -k https://10.254.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   611  100   611    0     0  79114      0 --:--:-- --:--:-- --:--:-- 87285
+{
+  "paths": [
+    "/api",
+    "/api/v1",
+    "/apis",
+    "/apis/apps",
+    "/apis/apps/v1alpha1",
+    "/apis/authentication.k8s.io",
+    "/apis/authentication.k8s.io/v1beta1",
+    "/apis/autoscaling",
+    "/apis/autoscaling/v1",
+    "/apis/batch",
+    "/apis/batch/v1",
+    "/apis/batch/v2alpha1",
+    "/apis/extensions",
+    "/apis/extensions/v1beta1",
+    "/apis/policy",
+    "/apis/policy/v1alpha1",
+    "/apis/rbac.authorization.k8s.io",
+    "/apis/rbac.authorization.k8s.io/v1alpha1",
+    "/healthz",
+    "/healthz/ping",
+    "/logs/",
+    "/metrics",
+    "/swaggerapi/",
+    "/ui/",
+    "/version"
+  ]
+}[root@master kubernetes]#
